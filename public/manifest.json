@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "DocTalk",
+  "name": "Your Online Medical Appointments",
   "icons": [
     {
       "src": "favicon.ico",

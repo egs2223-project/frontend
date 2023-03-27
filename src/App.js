@@ -8,7 +8,7 @@ let App = () => {
     <Container fluid>
       <Container className='text-center'>
         <h1 className='header'>DocTalk</h1>
-        <Button variant='info' classname="mt-3" onClick={() =>window.location.href='https://localhost:7000/v1/login'}>Sign In!</Button>
+        <Button variant='info' classname="mt-3" onClick={() =>window.location.href='http://localhost:5000/'}>Sign In!</Button>
       </Container>
     </Container>
   );
