@@ -1,58 +1,34 @@
 import React from 'react';
 import './App.css';
-import {BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/home';
 import Register from './pages/register';
+import RegisterDoctor from './pages/register_doctor';
+import RegisterPatient from './pages/register_patient';
 import Appointments from './pages/appointments'
+import NewAppointment from './pages/NewAppointment'
+import Homepage from './pages/homepage'
 
+export const Context = React.createContext(null);
 
-export const UserContext = React.createContext();
+function App() {
+  const [ctx, set_ctx] = React.useState({user_data: null, user_role: null, status: 'uninitialized'});
 
-class UserCtx {
-    constructor() {
-        this.user = null;
-        this.user_role = null;
-        this.status = "uninitialized";
-    }
-
-    setUser(user) {
-        this.user = user;
-    }
-
-    setUserRole(role) {
-        this.user_role = role;
-    }
-
-    setStatus(status) {
-        this.status = status;
-    }
+  return (
+    <BrowserRouter>
+      <Context.Provider value={{ctx, set_ctx}}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/register/doctor" element={<RegisterDoctor/>} />
+          <Route path="/register/patient" element={<RegisterPatient />} />
+          <Route path="/homepage" element={<Homepage />} />
+          <Route path="/appointments" element={<Appointments />} />
+          <Route path="/createAppointment" element={<NewAppointment />} />
+        </Routes>
+      </Context.Provider>
+    </BrowserRouter>
+  );
 }
-
-class App extends React.Component {
-  constructor(props) {
-      super(props);
-
-      this.update = (c) => {
-          this.setState(() => ({ c }));
-      };
-
-      this.state = { ctx: new UserCtx(), ctx_update: this.update };
-  }
-
-  render() {
-      return (
-          <Router>
-              <UserContext.Provider value={this.state}>
-                  <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/register" element={<Register />} />
-                      <Route path="/appointments" element={<Appointments />} />
-                  </Routes>
-              </UserContext.Provider>
-          </Router>
-      );
-  }
-}
-
 
 export default App;

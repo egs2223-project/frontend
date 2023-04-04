@@ -1,20 +1,18 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Container, Button } from 'react-bootstrap';
-import { UserContext } from '../App';
+import { useNavigate } from "react-router-dom";
+import { Context } from '../App';
 
-class Home extends Component {
 
-    render() {
-        return (<UserRender />)
-    }
-}
+function Home() {
 
-function UserRender() {
-    const { ctx, ctx_update } = React.useContext(UserContext);
-    console.log(ctx.status);
+    const { ctx, set_ctx } = React.useContext(Context);
+    const navigate = useNavigate();
+    
+    console.log("Home context status: " + ctx.status);
 
     if (ctx.status === "uninitialized") {
-        loadUser(ctx, ctx_update);
+        loadUser(ctx, set_ctx);
         return(
             <Container fluid>
                 <Container className='text-center'>
@@ -23,48 +21,40 @@ function UserRender() {
                     <Button variant='info' classname="mt-3" onClick={() => window.location.href='https://localhost:7000/v1/login'}>Sign In!</Button>    
                 </Container>
             </Container>
-        )
-        
+        );
     }
 
     if (ctx.status === "registered") {
-        loadUser(ctx, ctx_update);
+        loadUser(ctx, set_ctx);
     }
 
     if (ctx.status === "unregistered") {
-        ctx.setStatus("registered");
-        window.location.href = '/register';
+        navigate("/register");
         return;
     }
 
     if (ctx.status === "unauthorized") {
-        return(
-            <Container fluid>
-                <Container className='text-center'>
-                    <h1 className='header'>DocTalk</h1>
-                    <h3 className='subheader'>Your online medical appointments. Sign in to get started!</h3>
-                    <Button variant='info' classname="mt-3" onClick={() => window.location.href='https://localhost:7000/v1/login'}>Sign In!</Button>    
+            return(
+                <Container fluid>
+                    <Container className='text-center'>
+                        <h1 className='header'>DocTalk</h1>
+                        <h3 className='subheader'>Your online medical appointments. Sign in to get started!</h3>
+                        <Button variant='info' classname="mt-3" onClick={() => window.location.href='https://localhost:7000/v1/login'}>Sign In!</Button>    
+                    </Container>
                 </Container>
-            </Container>
-        )
+            );
     }
 
     if (ctx.status === "authenticated") {
-        return (
-            <div>
-                <div>
-                    <h1 className='header'>DocTalk</h1>
-                    <h3 className='subheader'>Your online medical appointments. Click below to view your appointments.</h3>
-                    <button type="button" class="btn btn-primary" onClick={() => window.location.href = '/appointments'}>View Appointments</button>
-                </div>
-            </div>
-        );
+        navigate("/homepage");
     }
 
     return "Loading user data...";
 }
 
-function loadUser(ctx, ctx_update) {    
+
+function loadUser(ctx, set_ctx) {    
+    console.log(new Date() + " loading user...");
     fetch("/v1/self", {
         method: "GET",
         mode: "cors",
@@ -72,21 +62,22 @@ function loadUser(ctx, ctx_update) {
             "Content-Type": "application/json",
         },
     })
-        .then(response => {
-            if (response.status === 200) {
-                response.json().then
-                (responseJson => {
-                    ctx.setUser(responseJson["user_data"]);
-                    ctx.setUserRole(responseJson["user_type"]);
-                    ctx.setStatus("authenticated");
-                });
-            } else if (response.status === 404) {
-                ctx.setStatus("unregistered");
-            } else if (response.status === 401) {
-                ctx.setStatus("unauthorized");
-            }
-            ctx_update();
-        });
+    .then(response => {
+        if (response.status === 200) {
+            response.json().then
+            (responseJson => {
+                set_ctx({user_data: responseJson["user_data"], user_role: responseJson["user_type"], status: "authenticated"});
+            });
+        } else if (response.status === 404) {
+            set_ctx({...ctx, status: "unregistered"});     
+        } else if (response.status === 401) {
+            set_ctx({...ctx, status: "unauthorized"});
+        }
+        else {
+            set_ctx({...ctx, status: "uninitialized"});
+        }
+        console.log(new Date() + " updating...");
+    });
 }
 
 export default Home;
