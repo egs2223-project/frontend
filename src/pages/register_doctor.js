@@ -94,7 +94,7 @@ function RegisterDoctor() {
             </div>
             <div class="mb-3">
                 <label for="dob" class="form-label">Date of Birth</label>
-                <input type="text" class="form-control" id="dob"
+                <input type="datetime-local" class="form-control" id="dob"
                     name="date_of_birth" checked={state.date_of_birth} onChange={handleInputChange}></input>
                 <div id="dobHelp" class="form-text">Example: 2023-03-27T16:17:19.932Z</div>
             </div>

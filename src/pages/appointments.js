@@ -1,6 +1,8 @@
 import React from 'react';
 import { Context } from '../App';
 import { useNavigate } from "react-router-dom";
+import Call from './Call';
+import { Container } from 'react-bootstrap';
 
 function loadAppointments(state, set_state) {
     var now = new Date().toJSON();
@@ -192,37 +194,39 @@ function Appointments() {
 
     return (
         <>
-            <h1>Your next appointments:</h1>
-            <ul class="list-group">
-                {state.appointments.map((app) => 
-                    ctx.user_role === "Patient" ? <PatientAppointment data={{a: app, state: state}} /> : <DoctorAppointment data={{a: app, state: state}} />
-                )}
-            </ul>
-            {
-                ctx.user_role === "Patient" && 
-                <button type="button" class="btn btn-primary" onClick={() => navigate("/createAppointment")}>New Appointment</button>
-            }
-            {
-                Object.keys(state.selected_appointment).length !== 0 &&
-                <div>
-                    <button type="button" class="btn btn-primary">Join!</button>
-                    <button type="button" class="btn btn-danger" onClick={handleCancel}>Cancel</button>
-                </div>
-            }
-            {
-                ctx.user_role === "Doctor" && Object.keys(state.selected_appointment).length !== 0 &&
-                <div>
-                    <h3>Current Appointment:</h3>
-                    <form onSubmit={handleSelectedAppUpdate}>
-                        <div class="mb-3">
-                            <label for="summary" class="form-label">Summary</label>
-                            <input type="text" class="form-control" id="summary"
-                                name="summary" value={state.selected_appointment.summary} onChange={handleSelectedAppInputChange}></input>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Update</button>
-                    </form>
-                </div>
-            }
+            <Container fluid>
+                <h1>Your next appointments:</h1>
+                <ul class="list-group">
+                    {state.appointments.map((app) => 
+                        ctx.user_role === "Patient" ? <PatientAppointment data={{a: app, state: state}} /> : <DoctorAppointment data={{a: app, state: state}} />
+                    )}
+                </ul>
+                {
+                    ctx.user_role === "Patient" && 
+                    <button type="button" class="btn btn-primary" onClick={() => navigate("/createAppointment")}>New Appointment</button>
+                }
+                {
+                    Object.keys(state.selected_appointment).length !== 0 &&
+                    <div>
+                        <button type="button" class="btn btn-primary" onClick={<Call call={state}/>}>Join!</button>
+                        <button type="button" class="btn btn-danger" onClick={handleCancel}>Cancel</button>
+                    </div>
+                }
+                {
+                    ctx.user_role === "Doctor" && Object.keys(state.selected_appointment).length !== 0 &&
+                    <div>
+                        <h3>Current Appointment:</h3>
+                        <form onSubmit={handleSelectedAppUpdate}>
+                            <div class="mb-3">
+                                <label for="summary" class="form-label">Summary</label>
+                                <input type="text" class="form-control" id="summary"
+                                    name="summary" value={state.selected_appointment.summary} onChange={handleSelectedAppInputChange}></input>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </form>
+                    </div>
+                }
+            </Container>
         </>
     );
 }

@@ -10,15 +10,13 @@ function Homepage() {
             <Container className='text-center'>
                 <h1 className='header'>DocTalk</h1>
                 <h3 className='subheader'>Your online medical appointments!</h3>
-                <div>
-                    <Button variant='info' classname="mt-3" onClick={() => navigate("/appointments")}>View Appointments</Button>
-                </div>
-                <div>
-                    <Button variant='info' className="mt-3" onClick={() => navigate("/createAppointment")}>New Appointment</Button>
-                </div>
+                <Container fluid>
+                    <Button variant='info' classname="mt-12" onClick={() => navigate("/appointments")}>View Appointments</Button>
+                    <Button variant='info' className="mt-12" onClick={() => navigate("/createAppointment")}>New Appointment</Button>
+                    <Button variant='info' className="mt-12" onClick={() => navigate("/profile")}>Profile</Button>
+                </Container>
             </Container>
     );
-
 }
 
 export default Homepage;

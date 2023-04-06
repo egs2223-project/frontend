@@ -5,9 +5,10 @@ import Home from './pages/home';
 import Register from './pages/register';
 import RegisterDoctor from './pages/register_doctor';
 import RegisterPatient from './pages/register_patient';
-import Appointments from './pages/appointments'
-import NewAppointment from './pages/NewAppointment'
-import Homepage from './pages/homepage'
+import Appointments from './pages/appointments';
+import NewAppointment from './pages/NewAppointment';
+import Homepage from './pages/homepage';
+import Profile from './pages/profile';
 
 export const Context = React.createContext(null);
 
@@ -25,6 +26,7 @@ function App() {
           <Route path="/homepage" element={<Homepage />} />
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/createAppointment" element={<NewAppointment />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </Context.Provider>
     </BrowserRouter>

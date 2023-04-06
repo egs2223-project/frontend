@@ -110,7 +110,7 @@ function NewAppointment() {
             reason: null,
             summary: null,
             session_url: null,
-            specialty: null
+            specialty: null,
         });
 
     React.useEffect(() => {
