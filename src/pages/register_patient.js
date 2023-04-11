@@ -60,7 +60,8 @@ function RegisterPatient() {
             ...state
         };
 
-        fetch("/v1/patients/", {
+        fetch("https://localhost:7000/v1/patients/", {
+            credentials: 'include',    
             method: "POST",
             mode: "cors",
             headers: {

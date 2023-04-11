@@ -3,7 +3,8 @@ import { Context } from '../App';
 import { useNavigate } from "react-router-dom";
 
 async function updatePatient(patient) {
-    const resp = await fetch(`/v1/patients/${patient.id}`, {
+    const resp = await fetch(`https://localhost:7000/v1/patients/${patient.id}`, {
+        credentials: 'include',
         method: "PUT",
         mode: "cors",
         headers: {

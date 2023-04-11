@@ -55,7 +55,8 @@ function Home() {
 
 function loadUser(ctx, set_ctx) {    
     console.log(new Date() + " loading user...");
-    fetch("/v1/self", {
+    fetch("https://localhost:7000/v1/self", {
+        credentials: 'include',
         method: "GET",
         mode: "cors",
         headers: {

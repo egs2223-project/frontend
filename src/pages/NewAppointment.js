@@ -8,7 +8,8 @@ function LoadDoctors(state, set_state) {
         specialties += `&specialties=${specialty}`;
     }
 
-    fetch(`/v1/doctors?limit=50&offset=0${specialties}`, {
+    fetch(`https://localhost:7000/v1/doctors?limit=50&offset=0${specialties}`, {
+        credentials: 'include',
         method: "GET",
         mode: "cors",
         headers: {
@@ -35,7 +36,8 @@ function LoadDoctorAppointments(state, set_state) {
         return;
     }
 
-    fetch(`/v1/appointments?limit=50&offset=0&from=${now}&doctor_id=${state.selected_doctor}`, {
+    fetch(`https://localhost:7000/v1/appointments?limit=50&offset=0&from=${now}&doctor_id=${state.selected_doctor}`, {
+        credentials: 'include',
         method: "GET",
         mode: "cors",
         headers: {
@@ -57,7 +59,8 @@ function LoadDoctorAppointments(state, set_state) {
 function PostAppointment(appointmentBody, navigate) {
     console.log(JSON.stringify(appointmentBody));
 
-    fetch("/v1/appointments/", {
+    fetch("https://localhost:7000/v1/appointments/", {
+        credentials: 'include',
         method: "POST",
         mode: "cors",
         headers: {

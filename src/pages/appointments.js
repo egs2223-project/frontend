@@ -1,14 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Context } from '../App';
 import { useNavigate } from "react-router-dom";
-import Call from './Call';
-import { Container } from 'react-bootstrap';
 
 function loadAppointments(state, set_state) {
     var now = new Date().toJSON();
     console.log(`Loading next appointments for current user...`);
 
-    fetch(`/v1/appointments?status=Scheduled&limit=50&offset=0&from=${now}`, {
+    fetch(`https://localhost:7000/v1/appointments?status=Scheduled&limit=50&offset=0&from=${now}`, {
+        credentials: 'include',    
         method: "GET",
         mode: "cors",
         headers: {
@@ -39,7 +38,8 @@ function loadAppointments(state, set_state) {
 }
 
 async function loadAppointmentParticipants(doctor_id, patient_id) {
-    const r1 = await fetch(`/v1/doctors/${doctor_id}`, {
+    const r1 = await fetch(`https://localhost:7000/v1/doctors/${doctor_id}`, {
+        credentials: 'include', 
         method: "GET",
         mode: "cors",
         headers: {
@@ -47,7 +47,8 @@ async function loadAppointmentParticipants(doctor_id, patient_id) {
         },
     });
 
-    const r2 = await fetch(`/v1/patients/${patient_id}`, {
+    const r2 = await fetch(`https://localhost:7000/v1/patients/${patient_id}`, {
+        credentials: 'include', 
         method: "GET",
         mode: "cors",
         headers: {
@@ -72,7 +73,8 @@ async function loadAppointmentParticipants(doctor_id, patient_id) {
 } 
 
 async function updateAppointment(appointment) {    
-    const resp = await fetch(`/v1/appointments/${appointment.id}`, {
+    const resp = await fetch(`https://localhost:7000/v1/appointments/${appointment.id}`, {
+        credentials: 'include',
         method: "PUT",
         mode: "cors",
         headers: {
@@ -103,23 +105,24 @@ function Appointments() {
             loading: true, 
             error:false, 
             appointments: [], 
-            selected_appointment: {}
+            selected_appointment: {},
+            connected: false
         });
     const navigate = useNavigate();
 
     //
     const DoctorAppointment = (props) => {
         if(props.data.a.id === props.data.state.selected_appointment.id) {
-            return <li id={props.data.a.id} class="list-group-item active" onClick={handleSelect}>{props.data.a.specialty} appointment with {props.data.a.patient.name} - {props.data.a.datetime}</li>;
-        }
-        return <li id={props.data.a.id} class="list-group-item" onClick={handleSelect}>{props.data.a.specialty} appointment with {props.data.a.patient.name} - {props.data.a.datetime}</li>;
+            return <li id={props.data.a.id} className="list-group-item active" onClick={handleSelect}>{props.data.a.specialty} appointment with {props.data.a.patient.name} - {props.data.a.datetime}</li>;
+        } 
+        return <li id={props.data.a.id} className="list-group-item" onClick={handleSelect}>{props.data.a.specialty} appointment with {props.data.a.patient.name} - {props.data.a.datetime}</li>;
     }
 
     const PatientAppointment = (props) => {
         if(props.data.a.id === props.data.state.selected_appointment.id) {
-            return <li id={props.data.a.id} class="list-group-item active" onClick={handleSelect}>{props.data.a.specialty} appointment with {props.data.a.doctor.name} - {props.data.a.datetime}</li>;
+            return <li id={props.data.a.id} className="list-group-item active" onClick={handleSelect}>{props.data.a.specialty} appointment with {props.data.a.doctor.name} - {props.data.a.datetime}</li>;
         }
-        return <li id={props.data.a.id} class="list-group-item" onClick={handleSelect}>{props.data.a.specialty} appointment with {props.data.a.doctor.name} - {props.data.a.datetime}</li>;
+        return <li id={props.data.a.id} className="list-group-item" onClick={handleSelect}>{props.data.a.specialty} appointment with {props.data.a.doctor.name} - {props.data.a.datetime}</li>;
     }
     
     const handleSelect = (event) => {
@@ -144,6 +147,23 @@ function Appointments() {
         });
     }
 
+    const handleJoin = (event) => {
+        console.log("Connecting to a room...");
+        
+        if(state.connected === false) {
+            set_state({...state, connected: true});
+        }
+    }
+
+    const handleDisconnect = (event) => {
+        console.log("Disconnecting...");
+
+        if(state.connected === true) {
+            set_state({...state, connected: false});
+            window.location.href = "http://localhost:3000";
+        }
+    }
+
     const handleSelectedAppUpdate = (event) => {
         event.preventDefault();
         console.log("updating: " + event.target.id);
@@ -166,13 +186,34 @@ function Appointments() {
         appointment[name] = value;
         set_state({...state, selected_appointment: appointment});
     }
+
+    const UseScript = () => {
+        useEffect(() => {
+            const roomIdScript = document.createElement('script');
+            const roomId = state.selected_appointment.session_url.substring(27);
+            roomIdScript.text = `const ROOM_ID = "${roomId}"`
+            roomIdScript.async = false;
+            
+            const script = document.createElement('script');
+            script.src = '/script.js';
+            script.async = false;
+
+            document.body.appendChild(roomIdScript);
+            document.body.appendChild(script);
+
+            return () => {
+                document.body.removeChild(roomIdScript);
+                document.body.removeChild(script);
+            }
+        }, []);
+    };
     //
 
     React.useEffect(() => {
         if (ctx.status !== "authenticated") {
             navigate("/");
         }
-    }, []);
+    }, [ctx.status, navigate]);
 
     if(ctx.status !== "authenticated") {
         return "...";
@@ -186,47 +227,48 @@ function Appointments() {
         loadAppointments(state, set_state);
         return (<h1>Loading your appointments...</h1>);
     }
-    
-    let new_button = undefined;
-    if(ctx.user_role === "Patient") {
-        new_button = <button type="button" class="btn btn-primary" onClick={() => navigate("/createAppointment")}>New Appointment</button>
-    }
 
     return (
         <>
-            <Container fluid>
-                <h1>Your next appointments:</h1>
-                <ul class="list-group">
-                    {state.appointments.map((app) => 
-                        ctx.user_role === "Patient" ? <PatientAppointment data={{a: app, state: state}} /> : <DoctorAppointment data={{a: app, state: state}} />
-                    )}
-                </ul>
-                {
-                    ctx.user_role === "Patient" && 
-                    <button type="button" class="btn btn-primary" onClick={() => navigate("/createAppointment")}>New Appointment</button>
-                }
-                {
-                    Object.keys(state.selected_appointment).length !== 0 &&
-                    <div>
-                        <button type="button" class="btn btn-primary" onClick={<Call call={state}/>}>Join!</button>
-                        <button type="button" class="btn btn-danger" onClick={handleCancel}>Cancel</button>
-                    </div>
-                }
-                {
-                    ctx.user_role === "Doctor" && Object.keys(state.selected_appointment).length !== 0 &&
-                    <div>
-                        <h3>Current Appointment:</h3>
-                        <form onSubmit={handleSelectedAppUpdate}>
-                            <div class="mb-3">
-                                <label for="summary" class="form-label">Summary</label>
-                                <input type="text" class="form-control" id="summary"
-                                    name="summary" value={state.selected_appointment.summary} onChange={handleSelectedAppInputChange}></input>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Update</button>
-                        </form>
-                    </div>
-                }
-            </Container>
+            <h1>Your next appointments:</h1>
+            <ul className="list-group">
+                {state.appointments.map((app) => 
+                    ctx.user_role === "Patient" ? <PatientAppointment key={app.id} data={{a: app, state: state}} /> : <DoctorAppointment key={app.id} data={{a: app, state: state}} />
+                )}
+            </ul>
+            {
+                ctx.user_role === "Patient" && 
+                <button type="button" className="btn btn-primary" onClick={() => navigate("/appointments/new")}>New Appointment</button>
+            }
+            {
+                Object.keys(state.selected_appointment).length !== 0 && !state.connected &&
+                <div>
+                    <button type="button" className="btn btn-primary" onClick={handleJoin}>Join!</button>
+                    <button type="button" className="btn btn-danger" onClick={handleCancel}>Cancel</button>
+                </div>
+            }
+            {
+                ctx.user_role === "Doctor" && Object.keys(state.selected_appointment).length !== 0 &&
+                <div>
+                    <h3>Current Appointment:</h3>
+                    <form onSubmit={handleSelectedAppUpdate}>
+                        <div className="mb-3">
+                            <label htmlFor="summary" className="form-label">Summary</label>
+                            <input type="text" className="form-control" id="summary"
+                                name="summary" value={state.selected_appointment.summary} onChange={handleSelectedAppInputChange}></input>
+                        </div>
+                        <button type="submit" className="btn btn-primary">Update</button>
+                    </form>
+                </div>
+            }
+            {
+                state.connected && 
+                <div>
+                    <UseScript />
+                    <div id="video-grid"></div>
+                    <button type="button" className="btn btn-danger" onClick={handleDisconnect}>Leave Call</button>
+                </div>
+            }
         </>
     );
 }
