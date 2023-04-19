@@ -1,5 +1,6 @@
 FROM node:alpine
-COPY ./
+COPY ./ ./
 WORKDIR ./
 RUN npm install
-RUN npm start
+EXPOSE 3000
+ENTRYPOINT ["npm", "start"]
