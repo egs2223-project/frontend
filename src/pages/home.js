@@ -11,6 +11,12 @@ function Home() {
     
     console.log("Home context status: " + ctx.status);
 
+    React.useEffect(() => {
+        if (ctx.status === "unregistered") {
+            navigate('/register');
+        }
+    }, [ctx.status, navigate]);
+
     if (ctx.status === "uninitialized") {
         loadUser(ctx, set_ctx);
         return(
@@ -26,11 +32,6 @@ function Home() {
 
     if (ctx.status === "registered") {
         loadUser(ctx, set_ctx);
-    }
-
-    if (ctx.status === "unregistered") {
-        navigate("/register");
-        return;
     }
 
     if (ctx.status === "unauthorized") {
