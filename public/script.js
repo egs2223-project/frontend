@@ -1,8 +1,8 @@
-const socket = io('http://localhost:3300')
+const socket = io('http://webrtc.egs-doctalk.deti')
 const videoGrid = document.getElementById('video-grid')
 const myPeer = new Peer(undefined, {
-  host: 'localhost',
-  port: '3001'
+  host: 'peerjs.egs-doctalk.deti',
+  port: '80'
 })
 
 const myVideo = document.createElement('video')
