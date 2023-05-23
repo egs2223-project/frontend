@@ -111,7 +111,7 @@ function NewAppointment() {
             doctor_id: null,
             patient_id: ctx.user_data == null ? null : ctx.user_data.id,
             reason: null,
-            summary: null,
+            summary: '',
             session_url: null,
             specialty: null,
         });
