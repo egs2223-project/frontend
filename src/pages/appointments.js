@@ -6,12 +6,14 @@ function loadAppointments(state, set_state) {
     var now = new Date().toJSON();
     console.log(`Loading next appointments for current user...`);
 
-    fetch(`https://localhost:7000/v1/appointments?status=Scheduled&limit=50&offset=0&from=${now}`, {
+    const token = document.cookie.split('; ').filter(row => row.startsWith('jwt=')).map(c=>c.split('=')[1])[0];
+    fetch(`https://backend.egs-doctalk.deti/v1/appointments?status=Scheduled&limit=50&offset=0&from=${now}`, {
         credentials: 'include',    
         method: "GET",
         mode: "cors",
         headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
         },
     })
     .then(response => {
@@ -38,21 +40,24 @@ function loadAppointments(state, set_state) {
 }
 
 async function loadAppointmentParticipants(doctor_id, patient_id) {
-    const r1 = await fetch(`https://localhost:7000/v1/doctors/${doctor_id}`, {
+    const token = document.cookie.split('; ').filter(row => row.startsWith('jwt=')).map(c=>c.split('=')[1])[0];
+    const r1 = await fetch(`https://backend.egs-doctalk.deti/v1/doctors/${doctor_id}`, {
         credentials: 'include', 
         method: "GET",
         mode: "cors",
         headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
         },
     });
 
-    const r2 = await fetch(`https://localhost:7000/v1/patients/${patient_id}`, {
+    const r2 = await fetch(`https://backend.egs-doctalk.deti/v1/patients/${patient_id}`, {
         credentials: 'include', 
         method: "GET",
         mode: "cors",
         headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
         },
     });
 
@@ -73,12 +78,14 @@ async function loadAppointmentParticipants(doctor_id, patient_id) {
 } 
 
 async function updateAppointment(appointment) {    
-    const resp = await fetch(`https://localhost:7000/v1/appointments/${appointment.id}`, {
+    const token = document.cookie.split('; ').filter(row => row.startsWith('jwt=')).map(c=>c.split('=')[1])[0];
+    const resp = await fetch(`https://backend.egs-doctalk.deti/v1/appointments/${appointment.id}`, {
         credentials: 'include',
         method: "PUT",
         mode: "cors",
         headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(appointment)
     });
@@ -160,7 +167,7 @@ function Appointments() {
 
         if(state.connected === true) {
             set_state({...state, connected: false});
-            window.location.href = "http://localhost:3000";
+            window.location.href = "http://frontend.egs-doctalk.deti";
         }
     }
 

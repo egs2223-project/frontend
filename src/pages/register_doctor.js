@@ -57,12 +57,14 @@ function RegisterDoctor() {
             ...state
         };
 
-        fetch("https://localhost:7000/v1/doctors/", {
+        const token = document.cookie.split('; ').filter(row => row.startsWith('jwt=')).map(c=>c.split('=')[1])[0];
+        fetch("https://backend.egs-doctalk.deti/v1/doctors/", {
             credentials: 'include',
             method: "POST",
             mode: "cors",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(requestBodyDoctor)
         }).then(response => {

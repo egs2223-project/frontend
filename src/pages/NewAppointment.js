@@ -8,12 +8,14 @@ function LoadDoctors(state, set_state) {
         specialties += `&specialties=${specialty}`;
     }
 
-    fetch(`https://localhost:7000/v1/doctors?limit=50&offset=0${specialties}`, {
+    const token = document.cookie.split('; ').filter(row => row.startsWith('jwt=')).map(c=>c.split('=')[1])[0];
+    fetch(`https://backend.egs-doctalk.deti/v1/doctors?limit=50&offset=0${specialties}`, {
         credentials: 'include',
         method: "GET",
         mode: "cors",
         headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
         },
     })
         .then(response => {
@@ -36,12 +38,14 @@ function LoadDoctorAppointments(state, set_state) {
         return;
     }
 
-    fetch(`https://localhost:7000/v1/appointments?limit=50&offset=0&from=${now}&doctor_id=${state.selected_doctor}`, {
+    const token = document.cookie.split('; ').filter(row => row.startsWith('jwt=')).map(c=>c.split('=')[1])[0];
+    fetch(`https://backend.egs-doctalk.deti/v1/appointments?limit=50&offset=0&from=${now}&doctor_id=${state.selected_doctor}`, {
         credentials: 'include',
         method: "GET",
         mode: "cors",
         headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
         },
     })
         .then(response => {
@@ -59,12 +63,14 @@ function LoadDoctorAppointments(state, set_state) {
 function PostAppointment(appointmentBody, navigate) {
     console.log(JSON.stringify(appointmentBody));
 
-    fetch("https://localhost:7000/v1/appointments/", {
+    const token = document.cookie.split('; ').filter(row => row.startsWith('jwt=')).map(c=>c.split('=')[1])[0];
+    fetch("https://backend.egs-doctalk.deti/v1/appointments/", {
         credentials: 'include',
         method: "POST",
         mode: "cors",
         headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(appointmentBody)
     }).then(response => {
