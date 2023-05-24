@@ -76,7 +76,7 @@ function ProfileDoctor() {
         if (ctx.status !== "authenticated") {
             navigate("/");
         }
-    }, []);
+    }, [ctx.status, navigate]);
 
     if(ctx.status !== "authenticated") {
         return "...";
@@ -86,43 +86,43 @@ function ProfileDoctor() {
         <div>
         <h3>Dr. {state.name}</h3>
         <form onSubmit={handleSubmit}>
-            <div class="mb-3">
-                <label for="dob" class="form-label">Date of Birth</label>
-                <input type="datetime-local" class="form-control" id="dob"
+            <div className="mb-3">
+                <label htmlFor="dob" className="form-label">Date of Birth</label>
+                <input type="datetime-local" className="form-control" id="dob"
                     name="date_of_birth" value={state.date_of_birth} onChange={handleInputChange}></input>
-                <div id="dobHelp" class="form-text">Example: 2023-03-27T16:17:19.932Z</div>
+                <div id="dobHelp" className="form-text">Example: 2023-03-27T16:17:19.932Z</div>
             </div>
-            <div class="mb-3">
-                <label for="phoneNumber" class="form-label">Phone Number</label>
-                <input type="text" class="form-control" id="phoneNumber"
+            <div className="mb-3">
+                <label htmlFor="phoneNumber" className="form-label">Phone Number</label>
+                <input type="text" className="form-control" id="phoneNumber"
                     name="phone_number" value={state.phone_number} onChange={handleInputChange}></input>
             </div>
-            <div class="mb-3">
-                <label for="address" class="form-label">Address</label>
-                <input type="text" class="form-control" id="address"
+            <div className="mb-3">
+                <label htmlFor="address" className="form-label">Address</label>
+                <input type="text" className="form-control" id="address"
                     name="address" value={state.address} onChange={handleInputChange}></input>
             </div>
-            <div class="mb-3">
-                <label for="city" class="form-label">City</label>
-                <input type="text" class="form-control" id="city"
+            <div className="mb-3">
+                <label htmlFor="city" className="form-label">City</label>
+                <input type="text" className="form-control" id="city"
                     name="city" value={state.city} onChange={handleInputChange}></input>
             </div>
-            <div class="mb-3">
-                <label for="region" class="form-label">Region</label>
-                <input type="text" class="form-control" id="region"
+            <div className="mb-3">
+                <label htmlFor="region" className="form-label">Region</label>
+                <input type="text" className="form-control" id="region"
                     name="region" value={state.region} onChange={handleInputChange}></input>
             </div>
-            <div class="mb-3">
-                <label for="postal_code" class="form-label">Postal Code</label>
-                <input type="text" class="form-control" id="postal_code"
+            <div className="mb-3">
+                <label htmlFor="postal_code" className="form-label">Postal Code</label>
+                <input type="text" className="form-control" id="postal_code"
                     name="postal_code" value={state.postal_code} onChange={handleInputChange}></input>
             </div>
-            <div class="mb-3">
-                <label for="country" class="form-label">Country</label>
-                <input type="text" class="form-control" id="country"
+            <div className="mb-3">
+                <label htmlFor="country" className="form-label">Country</label>
+                <input type="text" className="form-control" id="country"
                     name="country" value={state.country} onChange={handleInputChange}></input>
             </div>
-            <select class="form-select form-select-lg mb-3" multiple aria-label=".form-select-lg example"
+            <select className="form-select form-select-lg mb-3" multiple aria-label=".form-select-lg example"
                 onChange={handleSpecialtiesInputChange} name="specialties" value={state.specialties}>
                 <option selected>Specialties</option>
                 <option value="Allergiology">Allergiology</option>
@@ -147,8 +147,8 @@ function ProfileDoctor() {
                 <option value="Surgery">Surgery</option>
                 <option value="Urology">Urology</option>
             </select>
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <button type="button" class="btn btn-danger" onClick={handleCancel}>Cancel</button>
+            <button type="submit" className="btn btn-primary">Submit</button>
+            <button type="button" className="btn btn-danger" onClick={handleCancel}>Cancel</button>
         </form>
         </div>
     );

@@ -29,7 +29,7 @@ function LoadDoctors(state, set_state) {
 }
 
 function LoadDoctorAppointments(state, set_state) {
-    var now = `2022-04-03T23:20:27.890Z`;  //change to current time
+    var now = new Date().toJSON();
 
     if (state.selected_doctor == null) {
         set_state({ ...state, selected_doctor_apps: [] });
@@ -120,7 +120,7 @@ function NewAppointment() {
         if (ctx.status !== "authenticated") {
             navigate("/");
         }
-    }, []);
+    }, [ctx.status, navigate]);
 
     if (ctx.status !== "authenticated") {
         return "...";
@@ -130,9 +130,9 @@ function NewAppointment() {
         return (
             <div>
                 <h1>Select the specialt(y/ies) you want</h1>
-                <select class="form-select form-select-lg mb-3" multiple aria-label=".form-select-lg example"
+                <select className="form-select form-select-lg mb-3" multiple aria-label=".form-select-lg example"
                     onChange={handleSpecialtiesInputChange} name="selected_specialties" value={state.selected_specialties}>
-                    <option selected>Specialties</option>
+                    <option value="Specialties">Specialties</option>
                     <option value="Allergiology">Allergiology</option>
                     <option value="Immunology">Immunology</option>
                     <option value="Anesthesiology">Anesthesiology</option>
@@ -173,20 +173,20 @@ function NewAppointment() {
 
     const Doctor = (props) => {
         if (props.data.state.selected_doctor === props.data.d.id) {
-            return <li id={props.data.d.id} class="list-group-item active" onClick={handleSelectDoctor}>Dr. {props.data.d.name} - {props.data.d.specialties.toString()}</li>;
+            return <li id={props.data.d.id} className="list-group-item active" onClick={handleSelectDoctor}>Dr. {props.data.d.name} - {props.data.d.specialties.toString()}</li>;
         }
-        return <li id={props.data.d.id} class="list-group-item" onClick={handleSelectDoctor}>Dr. {props.data.d.name} - {props.data.d.specialties.toString()}</li>;
+        return <li id={props.data.d.id} className="list-group-item" onClick={handleSelectDoctor}>Dr. {props.data.d.name} - {props.data.d.specialties.toString()}</li>;
     }
 
     const Appointment = (props) => {
-        return <li id={props.data.d.id} class="list-group-item">{props.data.d.datetime}</li>;
+        return <li id={props.data.a.id} className="list-group-item">{props.data.a.datetime}</li>;
     }
 
     const Specialty = (props) => {
         if (props.data.state.app_specialty === props.data.s) {
-            return <li id={props.data.s} class="list-group-item active" onClick={handleSelectAppSpecialty}>{props.data.s}</li>;
+            return <li id={props.data.s} className="list-group-item active" onClick={handleSelectAppSpecialty}>{props.data.s}</li>;
         }
-        return <li id={props.data.s} class="list-group-item" onClick={handleSelectAppSpecialty}>{props.data.s}</li>;
+        return <li id={props.data.s} className="list-group-item" onClick={handleSelectAppSpecialty}>{props.data.s}</li>;
     }
 
     const handleSelectAppSpecialty = (event) => {
@@ -248,29 +248,29 @@ function NewAppointment() {
         <div>
             <SpecialtySelector></SpecialtySelector>
             <h1>Doctors: </h1>
-            <ul class="list-group">
-                {state.doctors.map((d) => <Doctor data={{ d: d, state: state }} />)}
+            <ul className="list-group">
+                {state.doctors.map((d) => <Doctor key={d.id} data={{ d: d, state: state }} />)}
             </ul>
             <h1>Already Scheduled Appointments: </h1>
-            <ul class="list-group">
-                {state.selected_doctor_apps.map((d) => <Appointment data={{ d: d, state: state }} />)}
+            <ul className="list-group">
+                {state.selected_doctor_apps.map((a) => <Appointment key={a.id} data={{ a: a, state: state }} />)}
             </ul>
             <h1>Appointment Specialty: </h1>
-            <ul class="list-group">
-                {state.selected_doctor_specialties.map((s) => <Specialty data={{ s: s, state: state }} />)}
+            <ul className="list-group">
+                {state.selected_doctor_specialties.map((s) => <Specialty key={s.toString()} data={{ s: s, state: state }} />)}
             </ul>
             <form onSubmit={handleSubmit}>
-                <div class="mb-3">
-                    <label for="datetime" class="form-label">Date Time</label>
-                    <input type="datetime-local" class="form-control" id="datetime" value={appointment.datetime}
+                <div className="mb-3">
+                    <label htmlFor="datetime" className="form-label">Date Time</label>
+                    <input type="datetime-local" className="form-control" id="datetime" value={appointment.datetime}
                         name="datetime" onChange={handleInputChange}></input>
                 </div>
-                <div class="mb-3">
-                    <label for="name" class="form-label">Appointment Reason</label>
-                    <input type="text" class="form-control" id="name"
+                <div className="mb-3">
+                    <label htmlFor="name" className="form-label">Appointment Reason</label>
+                    <input type="text" className="form-control" id="name"
                         name="reason" value={state.name} onChange={handleInputChange}></input>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" className="btn btn-primary">Submit</button>
             </form>
         </div>
     );

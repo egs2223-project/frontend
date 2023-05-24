@@ -238,7 +238,7 @@ function Appointments() {
             </ul>
             {
                 ctx.user_role === "Patient" && 
-                <button type="button" className="btn btn-primary" onClick={() => navigate("/appointments/new")}>New Appointment</button>
+                <button type="button" className="btn btn-primary" onClick={() => navigate("/createAppointment")}>New Appointment</button>
             }
             {
                 Object.keys(state.selected_appointment).length !== 0 && !state.connected &&
@@ -253,7 +253,7 @@ function Appointments() {
                     <h3>Current Appointment:</h3>
                     <form onSubmit={handleSelectedAppUpdate}>
                         <div className="mb-3">
-                            <label htmlFor="summary" className="form-label">Summary</label>
+                            <label htmlhtmlFor="summary" className="form-label">Summary</label>
                             <input type="text" className="form-control" id="summary"
                                 name="summary" value={state.selected_appointment.summary} onChange={handleSelectedAppInputChange}></input>
                         </div>

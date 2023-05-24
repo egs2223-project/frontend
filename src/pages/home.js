@@ -15,6 +15,10 @@ function Home() {
         if (ctx.status === "unregistered") {
             navigate('/register');
         }
+
+        if (ctx.status === "authenticated") {
+            navigate("/homepage");
+        }
     }, [ctx.status, navigate]);
 
     if (ctx.status === "uninitialized") {
@@ -22,9 +26,10 @@ function Home() {
         return(
             <Container fluid>
                 <Container className='text-center'>
+                    <img src={require('../logo.png')} width="200" ></img>
                     <h1 className='header'>DocTalk</h1>
                     <h3 className='subheader'>Your online medical appointments. Sign in to get started!</h3>
-                    <Button variant='info' classname="mt-3" onClick={() => window.location.href='https://localhost:7000/v1/login'}>Sign In!</Button>    
+                    <Button variant='info' className="mt-3" onClick={() => window.location.href='https://localhost:7000/v1/login'}>Sign In!</Button>    
                 </Container>
             </Container>
         );
@@ -38,16 +43,13 @@ function Home() {
             return(
                 <Container fluid>
                     <Container className='text-center'>
+                        <img src={require('../logo.png')} width="200" ></img>
                         <h1 className='header'>DocTalk</h1>
                         <h3 className='subheader'>Your online medical appointments. Sign in to get started!</h3>
-                        <Button variant='info' classname="mt-3" onClick={() => window.location.href='https://localhost:7000/v1/login'}>Sign In!</Button>    
+                        <Button variant='info' className="mt-3" onClick={() => window.location.href='https://localhost:7000/v1/login'}>Sign In!</Button>    
                     </Container>
                 </Container>
             );
-    }
-
-    if (ctx.status === "authenticated") {
-        navigate("/homepage");
     }
 
     return "Loading user data...";
