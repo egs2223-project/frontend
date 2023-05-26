@@ -1,5 +1,5 @@
 FROM node:alpine
-COPY ./frontend /
+COPY ./frontend-k3s /
 WORKDIR /
 RUN npm install
 EXPOSE 3000
