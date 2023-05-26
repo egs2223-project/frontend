@@ -253,7 +253,7 @@ function Appointments() {
                     <h3>Current Appointment:</h3>
                     <form onSubmit={handleSelectedAppUpdate}>
                         <div className="mb-3">
-                            <label htmlhtmlFor="summary" className="form-label">Summary</label>
+                            <label htmlFor="summary" className="form-label">Summary</label>
                             <input type="text" className="form-control" id="summary"
                                 name="summary" value={state.selected_appointment.summary} onChange={handleSelectedAppInputChange}></input>
                         </div>
