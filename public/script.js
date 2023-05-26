@@ -1,8 +1,7 @@
-const socket = io('http://webrtc.egs-doctalk.deti')
+const socket = io('app-egs-doctalk.duckdns.org')
 const videoGrid = document.getElementById('video-grid')
 const myPeer = new Peer(undefined, {
-  host: 'peerjs.egs-doctalk.deti',
-  port: '80'
+  host: 'app-egs-doctalk.duckdns.org'
 })
 
 const myVideo = document.createElement('video')

@@ -7,7 +7,7 @@ function loadAppointments(state, set_state) {
     console.log(`Loading next appointments for current user...`);
 
     const token = document.cookie.split('; ').filter(row => row.startsWith('jwt=')).map(c=>c.split('=')[1])[0];
-    fetch(`https://backend.egs-doctalk.deti/v1/appointments?status=Scheduled&limit=50&offset=0&from=${now}`, {
+    fetch(`/v1/appointments?status=Scheduled&limit=50&offset=0&from=${now}`, {
         credentials: 'include',    
         method: "GET",
         mode: "cors",
@@ -41,7 +41,7 @@ function loadAppointments(state, set_state) {
 
 async function loadAppointmentParticipants(doctor_id, patient_id) {
     const token = document.cookie.split('; ').filter(row => row.startsWith('jwt=')).map(c=>c.split('=')[1])[0];
-    const r1 = await fetch(`https://backend.egs-doctalk.deti/v1/doctors/${doctor_id}`, {
+    const r1 = await fetch(`/v1/doctors/${doctor_id}`, {
         credentials: 'include', 
         method: "GET",
         mode: "cors",
@@ -51,7 +51,7 @@ async function loadAppointmentParticipants(doctor_id, patient_id) {
         },
     });
 
-    const r2 = await fetch(`https://backend.egs-doctalk.deti/v1/patients/${patient_id}`, {
+    const r2 = await fetch(`/v1/patients/${patient_id}`, {
         credentials: 'include', 
         method: "GET",
         mode: "cors",
@@ -79,7 +79,7 @@ async function loadAppointmentParticipants(doctor_id, patient_id) {
 
 async function updateAppointment(appointment) {    
     const token = document.cookie.split('; ').filter(row => row.startsWith('jwt=')).map(c=>c.split('=')[1])[0];
-    const resp = await fetch(`https://backend.egs-doctalk.deti/v1/appointments/${appointment.id}`, {
+    const resp = await fetch(`/v1/appointments/${appointment.id}`, {
         credentials: 'include',
         method: "PUT",
         mode: "cors",
@@ -167,7 +167,7 @@ function Appointments() {
 
         if(state.connected === true) {
             set_state({...state, connected: false});
-            window.location.href = "http://frontend.egs-doctalk.deti";
+            window.location.href = "https://app-egs-doctalk.duckdns.org/";
         }
     }
 
@@ -260,7 +260,7 @@ function Appointments() {
                     <h3>Current Appointment:</h3>
                     <form onSubmit={handleSelectedAppUpdate}>
                         <div className="mb-3">
-                            <label htmlhtmlFor="summary" className="form-label">Summary</label>
+                            <label htmlFor="summary" className="form-label">Summary</label>
                             <input type="text" className="form-control" id="summary"
                                 name="summary" value={state.selected_appointment.summary} onChange={handleSelectedAppInputChange}></input>
                         </div>

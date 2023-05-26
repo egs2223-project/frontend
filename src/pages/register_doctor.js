@@ -64,7 +64,7 @@ function RegisterDoctor() {
         };
 
         const token = document.cookie.split('; ').filter(row => row.startsWith('jwt=')).map(c=>c.split('=')[1])[0];
-        fetch("https://backend.egs-doctalk.deti/v1/doctors/", {
+        fetch("/v1/doctors/", {
             credentials: 'include',
             method: "POST",
             mode: "cors",

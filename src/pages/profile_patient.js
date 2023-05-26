@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 async function updatePatient(patient) {
     const token = document.cookie.split('; ').filter(row => row.startsWith('jwt=')).map(c=>c.split('=')[1])[0];
-    const resp = await fetch(`https://backend.egs-doctalk.deti/v1/patients/${patient.id}`, {
+    const resp = await fetch(`/v1/patients/${patient.id}`, {
         credentials: 'include',
         method: "PUT",
         mode: "cors",

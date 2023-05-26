@@ -67,7 +67,7 @@ function RegisterPatient() {
         };
 
         const token = document.cookie.split('; ').filter(row => row.startsWith('jwt=')).map(c=>c.split('=')[1])[0];
-        fetch("https://backend.egs-doctalk.deti/v1/patients/", {
+        fetch("/v1/patients/", {
             credentials: 'include',    
             method: "POST",
             mode: "cors",

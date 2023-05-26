@@ -9,7 +9,7 @@ function LoadDoctors(state, set_state) {
     }
 
     const token = document.cookie.split('; ').filter(row => row.startsWith('jwt=')).map(c=>c.split('=')[1])[0];
-    fetch(`https://backend.egs-doctalk.deti/v1/doctors?limit=50&offset=0${specialties}`, {
+    fetch(`/v1/doctors?limit=50&offset=0${specialties}`, {
         credentials: 'include',
         method: "GET",
         mode: "cors",
@@ -39,7 +39,7 @@ function LoadDoctorAppointments(state, set_state) {
     }
 
     const token = document.cookie.split('; ').filter(row => row.startsWith('jwt=')).map(c=>c.split('=')[1])[0];
-    fetch(`https://backend.egs-doctalk.deti/v1/appointments?limit=50&offset=0&from=${now}&doctor_id=${state.selected_doctor}`, {
+    fetch(`/v1/appointments?limit=50&offset=0&from=${now}&doctor_id=${state.selected_doctor}`, {
         credentials: 'include',
         method: "GET",
         mode: "cors",
@@ -64,7 +64,7 @@ function PostAppointment(appointmentBody, navigate) {
     console.log(JSON.stringify(appointmentBody));
 
     const token = document.cookie.split('; ').filter(row => row.startsWith('jwt=')).map(c=>c.split('=')[1])[0];
-    fetch("https://backend.egs-doctalk.deti/v1/appointments/", {
+    fetch("/v1/appointments/", {
         credentials: 'include',
         method: "POST",
         mode: "cors",
